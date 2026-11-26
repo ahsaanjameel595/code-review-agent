@@ -1,39 +1,67 @@
 """Agent workflow. Day 2: shared state. Day 3: Planner node."""
+# import json
+# from operator import add
+# from pathlib import Path
+# from typing import Annotated, Literal, TypedDict
+
+# from streamlit import status
+
+# Status = Literal[
+#     "planning", "coding", "testing", "reviewing",
+#     "verifying", "awaiting_approval", "done", "failed",
+# ]
+
+
 import json
 from operator import add
 from pathlib import Path
-from typing import Annotated, Literal, TypedDict
+from typing import Annotated,Literal,TypedDict
+from streamlit import status
 
-Status = Literal[
-    "planning", "coding", "testing", "reviewing",
-    "verifying", "awaiting_approval", "done", "failed",
+Status=Literal[
+    "planning","coding","testing","reviewing",
+    "verifying","awaiting_approval","done","failed"
 ]
 
 
-class AgentState(TypedDict, total=False):
-    # Input
-    task: str            # e.g. "Add a priority field to todos"
-    repo_path: str       # repo the agent edits (NOT this project)
-    branch: str          # e.g. ai-agent/add-priority
+# class AgentState(TypedDict, total=False):
+#     # Input
+#     task: str            # e.g. "Add a priority field to todos"
+#     repo_path: str       # repo the agent edits (NOT this project)
+#     branch: str          # e.g. ai-agent/add-priority
 
-    # Planning
-    plan: dict           # {"objective", "requirements", "tasks", "files_to_change"}
-    relevant_files: list[str]
+#     # Planning
+#     plan: dict           # {"objective", "requirements", "tasks", "files_to_change"}
+#     relevant_files: list[str]
 
-    # Results
-    diff: str
-    test_output: str
-    tests_passed: bool
-    lint_passed: bool
-    review_issues: list[dict]    # [{"severity", "message"}]
+#     # Results
+#     diff: str
+#     test_output: str
+#     tests_passed: bool
+#     lint_passed: bool
+#     review_issues: list[dict]    # [{"severity", "message"}]
 
-    # Loop control
-    iteration: int
-    max_iterations: int
-    status: Status
-    # Annotated[..., add]: new failures are appended, not overwritten
-    failure_history: Annotated[list[str], add]
-
+#     # Loop control
+#     iteration: int
+#     max_iterations: int
+#     status: Status
+#     # Annotated[..., add]: new failures are appended, not overwritten
+#     failure_history: Annotated[list[str], add]
+class AgentState(TypedDict,total=False):
+    task:str
+    repo_path:str
+    branch:str
+    planning:dict
+    relevent_files=list[str]
+    diff:str
+    test_output:str
+    tests_passed:bool
+    list_passed:bool
+    review_issues:list[dict]
+    iteration:int
+    max_iteration:int
+    status:Status
+    failure_history:Annotated[list[str], add]
 
 def initial_state(task: str, repo_path: str, max_iterations: int = 3) -> AgentState:
     """Fresh state for a new run."""
@@ -52,7 +80,25 @@ def initial_state(task: str, repo_path: str, max_iterations: int = 3) -> AgentSt
         max_iterations=max_iterations,
         status="planning",
         failure_history=[],
-    )
+#     )
+# def initial_state(task:str,repo_path:str,max_iterations: int =3)->AgentState:
+#     """fresh state for a new run"""
+#     return AgentState(
+#         task:task,
+#         repo_path=repo_path,
+#         branch="",
+#         plan={},
+#         relevant_files=[],
+#         diff="",
+#         test_output=False,
+#         lint_passed=False,
+#         review_issues=[],
+#         iteration=0,
+#         max_iterations=max_iterations,
+#         status:"planning",
+#         failure_history=[],
+#     )
+
 
 
 # ---------------------------------------------------------------- Planner (Day 3)
